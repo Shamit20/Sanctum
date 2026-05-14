@@ -34,7 +34,7 @@ const UserHome = ({ user }) => {
     const fetchDynamicAnalytics = async () => {
       try {
         // 1. FETCH TRUE ZEN SCORE
-        const scoreRes = await axios.get(`http://localhost:5001/api/users/${user.id}/zenscore`);
+        const scoreRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/${user.id}/zenscore`);
         const actualZen = scoreRes.data.zenScore || 0;
         localStorage.setItem('zenScore', actualZen.toString());
         animateScore(actualZen); 
@@ -60,7 +60,7 @@ const UserHome = ({ user }) => {
         setWeeklyZen(Math.max(0, pointsThisWeek));
 
         // 4. FETCH SESSIONS & TRUE MESSAGE COUNT
-        const sessionsRes = await axios.get(`http://localhost:5001/api/sessions?userId=${user.id}`);
+        const sessionsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/sessions?userId=${user.id}`);
         const sessions = sessionsRes.data;
 
         if (sessions.length === 0) {
@@ -70,7 +70,7 @@ const UserHome = ({ user }) => {
         }
 
         // Fetch all history data concurrently to get the true mathematical lifetime count
-        const historyPromises = sessions.map(s => axios.get(`http://localhost:5001/api/history/${s.id}`));
+        const historyPromises = sessions.map(s => axios.get(`${import.meta.env.VITE_API_URL}/api/history/${s.id}`));
         const allHistories = await Promise.all(historyPromises);
 
         let allUserMessages = [];

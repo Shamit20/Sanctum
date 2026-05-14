@@ -25,7 +25,7 @@ const ZenGames = ({ user }) => {
   // FIX: Fetch the real score from the database when you open the games page
   useEffect(() => {
     if (user && user.id !== 'guest') {
-      axios.get(`http://localhost:5001/api/users/${user.id}/zenscore`)
+      axios.get(`${import.meta.env.VITE_API_URL}/api/users/${user.id}/zenscore`)
         .then(res => {
            setScore(res.data.zenScore || 0);
            localStorage.setItem('zenScore', res.data.zenScore || 0); 
@@ -43,7 +43,7 @@ const ZenGames = ({ user }) => {
       
       if (user && user.id !== 'guest') {
         // Silently save to database in the background
-        axios.put(`http://localhost:5001/api/users/${user.id}/zenscore`, { score: newScore }).catch(e => {});
+        axios.put(`${import.meta.env.VITE_API_URL}/api/users/${user.id}/zenscore`, { score: newScore }).catch(e => {});
       }
       return newScore;
     });

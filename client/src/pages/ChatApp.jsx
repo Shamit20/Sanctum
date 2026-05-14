@@ -73,7 +73,7 @@ const ChatApp = ({ user }) => {
     if (isGuest) { setSessions([]); setCurrentSessionId('guest-session'); return; }
     const fetchSessions = async () => {
       try {
-        const response = await axios.get(`http://localhost:5001/api/sessions?userId=${user.id}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/sessions?userId=${user.id}`);
         if (response.data && response.data.length > 0) {
           setSessions(response.data); 
           const savedId = localStorage.getItem('currentSessionId');
@@ -93,7 +93,7 @@ const ChatApp = ({ user }) => {
     }
     const fetchHistory = async () => {
       try {
-        const response = await axios.get(`http://localhost:5001/api/history/${currentSessionId}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/history/${currentSessionId}`);
         if (response.data && response.data.length > 0) setMessages(response.data);
         else setMessages([{ sender: 'ai', text: `Hello ${user.username}. I'm here to listen without judgment. How are you feeling right now?`, timestamp: new Date().toISOString() }]);
       } catch (error) { console.error("Could not load history", error); }
@@ -197,7 +197,7 @@ const ChatApp = ({ user }) => {
     const newName = window.prompt("Rename space:", oldName === "New Space" ? "" : oldName);
     if (!newName || newName.trim() === "" || newName === oldName) return;
     try {
-      await axios.put(`http://localhost:5001/api/sessions/${id}`, { name: newName });
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/sessions/${id}`, { name: newName });
       setSessions(sessions.map(s => s.id === id ? { ...s, name: newName } : s));
     } catch (error) {}
   };
@@ -206,7 +206,7 @@ const ChatApp = ({ user }) => {
     e.stopPropagation(); 
     if (!window.confirm("Purge this conversation permanently?")) return;
     try {
-      await axios.delete(`http://localhost:5001/api/sessions/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/sessions/${id}`);
       const updatedSessions = sessions.filter(s => s.id !== id);
       setSessions(updatedSessions);
       if (currentSessionId === id) {
@@ -228,7 +228,7 @@ const ChatApp = ({ user }) => {
     const sessionName = sessions.find(s => s.id === currentSessionId)?.name || "New Space";
 
     try {
-      const response = await axios.post('http://localhost:5001/api/chat', {
+      const response = await axios.post('${import.meta.env.VITE_API_URL}/api/chat', {
         message: userMsg.text,
         isIncognito: isGuest ? true : isIncognito,
         sessionId: currentSessionId,

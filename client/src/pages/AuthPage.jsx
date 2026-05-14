@@ -20,31 +20,31 @@ const AuthPage = ({ setAuthUser }) => {
 
     try {
       if (authMode === 'login') {
-        const res = await axios.post(`http://localhost:5001/api/auth/login`, { identifier, password });
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, { identifier, password });
         const userData = { id: res.data.userId, username: res.data.username };
         localStorage.setItem('sanctumUser', JSON.stringify(userData));
         setAuthUser(userData);
       } 
       else if (authMode === 'register-step1') {
-        const res = await axios.post(`http://localhost:5001/api/auth/register-step1`, { username, email });
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register-step1`, { username, email });
         setSuccessMsg(res.data.message);
         setAuthMode('register-step2');
       }
       else if (authMode === 'register-step2') {
         if (!password.trim() || password.length < 6) return setError("Password must be at least 6 characters long.");
-        const res = await axios.post(`http://localhost:5001/api/auth/verify-otp`, { username, email, password, otp });
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/verify-otp`, { username, email, password, otp });
         const userData = { id: res.data.userId, username: res.data.username };
         localStorage.setItem('sanctumUser', JSON.stringify(userData));
         setAuthUser(userData);
       }
       else if (authMode === 'forgot-step1') {
-        const res = await axios.post(`http://localhost:5001/api/auth/forgot-password`, { email });
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/forgot-password`, { email });
         setSuccessMsg(res.data.message);
         setAuthMode('forgot-step2');
       }
       else if (authMode === 'forgot-step2') {
         if (!password.trim() || password.length < 6) return setError("Password must be at least 6 characters long.");
-        const res = await axios.post(`http://localhost:5001/api/auth/reset-password`, { email, otp, newPassword: password });
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/reset-password`, { email, otp, newPassword: password });
         setSuccessMsg(res.data.message);
         setIdentifier(''); setPassword(''); setEmail(''); setOtp(''); setShowPassword(false); 
         setAuthMode('login');

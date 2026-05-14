@@ -11,7 +11,7 @@ const MoodJournal = ({ user }) => {
 
   useEffect(() => {
     if (user.id === 'guest') return;
-    axios.get(`http://localhost:5001/api/journal/${user.id}`)
+    axios.get(`${import.meta.env.VITE_API_URL}/api/journal/${user.id}`)
       .then(res => setEntries(res.data))
       .catch(err => console.error("Failed to load journal"));
   }, [user.id]);
@@ -20,7 +20,7 @@ const MoodJournal = ({ user }) => {
     if (!newEntry.trim() || user.id === 'guest') return;
     setIsSaving(true);
     try {
-      const res = await axios.post('http://localhost:5001/api/journal', { userId: user.id, text: newEntry });
+      const res = await axios.post('${import.meta.env.VITE_API_URL}/api/journal', { userId: user.id, text: newEntry });
       setEntries([res.data.entry, ...entries]);
       setNewEntry('');
     } catch (err) { alert("Failed to encrypt and save entry."); }
